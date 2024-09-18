@@ -7,19 +7,22 @@ from decouple import config
 
 def run_task(title='Title', text="Text"):
     print("" * os.get_terminal_size().columns)
-    mail = config("MAIL")
-    print("", mail)
+    auxmail = config("AUX_MAIL")
+    collaborator = config("MAIN_MAIL", default = "")
+    print("", auxmail)
+    print("", "Collaborator:", collaborator)
     print("", title if title != "" else "No title")
     print("" * os.get_terminal_size().columns)
     print(text)
     print("" * os.get_terminal_size().columns)
     try:
         keep = gkeepapi.Keep()
-        success = keep.login(mail, config("PASS"))
+        success = keep.login(auxmail, config("AUX_MAIL_PASS"))
 
         note = keep.createNote(title=title, text=text)
-        note.pinned = True
-        note.color = gkeepapi.node.ColorValue.Red
+        note.pinned = False
+        # note.color = gkeepapi.node.ColorValue.Red
+        note.collaborators.add(collaborator)
         keep.sync()
         print(" Note synced ")
     except Exception as e:
@@ -58,8 +61,7 @@ def argument_parser() -> tuple[str,str]:
         # output error, and exit
         print(str(err))
         exit()
-    else:
-        return text, title
+    return text, title
 
 
 def main():
