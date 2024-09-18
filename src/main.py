@@ -27,7 +27,7 @@ def run_task(title='Title', text="Text"):
         print(" Error in note creation ")
 
 
-if __name__ == "__main__":
+def argument_parser() -> tuple[str,str]:
     # Command line arguments options
     try:
         parser = argparse.ArgumentParser(description='Add new note to Google Keep.')
@@ -55,8 +55,19 @@ if __name__ == "__main__":
             pass
 
     except Exception as err:
-        # output error, and return with an error code
+        # output error, and exit
         print(str(err))
+        exit()
     else:
-        # Execute function
-        run_task(title=title, text=text)
+        return text, title
+
+
+def main():
+    text, title = argument_parser()
+
+    # Execute function
+    run_task(title=title, text=text)
+
+
+if __name__ == "__main__":
+    main()
