@@ -20,11 +20,13 @@ Python modules required:
    ```
    *Note: You can obtain a master token using `gkeepapi` utilities or by following their documentation.*
 
-## Tips  
-- Create an alias for quick access like this:  
-  `alias k='. $WORKSPACE/venv/bin/activate && python $WORKSPACE/src/main.py'`  
-  where `WORKSPACE` environment variable is your absolute path.  
-  Now you can create notes just using `k note content`  
+## Tips
+- Create an alias for quick access using `uv`:
+  `alias k='uv run $WORKSPACE/src/main.py'`
+  where `WORKSPACE` is the absolute path to the repository.
+  Now you can create notes using: `k "note content"`
+
+## Usage
 
 ```  
 positional arguments:  

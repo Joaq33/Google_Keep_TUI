@@ -24,7 +24,13 @@ def run_task(title='Title', text="Text"):
         authenticate(email, keep)
         note = keep.createNote(title=title, text=text)
         note.pinned = True
-        # note.color = gkeepapi.node.ColorValue.Red
+        
+        # Add TUI label
+        label = keep.findLabel('TUI')
+        if not label:
+            label = keep.createLabel('TUI')
+        note.labels.add(label)
+        
         keep.sync()
         print(" Note synced ")
     except Exception as e:
