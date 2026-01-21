@@ -1,0 +1,25 @@
+[project]
+name = "gkeep-tui"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "asttokens",
+    "certifi",
+    "charset-normalizer",
+    "colorama",
+    "executing",
+    "future",
+    "gkeepapi==0.17.1",
+    "gpsoauth",
+    "icecream",
+    "idna",
+    "keyring>=25.7.0",
+    "pycryptodomex",
+    "pygments",
+    "python-decouple",
+    "requests",
+    "six",
+    "urllib3",
+]

@@ -2,37 +2,41 @@
 Quickly create notes without leaving your terminal  
 
 ## Requirements
-`An auxiliar gmail account is required to create the notes and share them to the main account`\
 Python modules required:
 - gkeepapi
 - python-decouple
+- keyring
 - requests
 
 ## Quickstart
-create `.env` file with your configured values:
-````
-AUX_MAIL='YOUR_AUXILIAR_GMAIL@gmail.com'  
-AUX_MAIL_PASS='YOUR_AUXILIAR_GMAIL_PASSWORD'  
-MAIN_MAIL='YOUR_GMAIL@gmail.com'
-````
+1. Create a `.env` file with your primary account:
+   ```env
+   MAIN_MAIL='YOUR_GMAIL@gmail.com'
+   ```
+2. Set up your Google Keep master token in the system keyring:
+   ```python
+   import keyring
+   keyring.set_password("google-keep-token", "main_email", "YOUR_MASTER_TOKEN")
+   ```
+   *Note: You can obtain a master token using `gkeepapi` utilities or by following their documentation.*
 
 ## Tips  
-- create an alias for quick access like this:\  
-``alias k='. $WORKSPACE/venv/bin/activate && python $WORKSPACE/src/main.py'``\  
-where WORKSPACE environment variable is your absolute path. \  
-Now you can create notes just using ``k note content``  
+- Create an alias for quick access like this:  
+  `alias k='. $WORKSPACE/venv/bin/activate && python $WORKSPACE/src/main.py'`  
+  where `WORKSPACE` environment variable is your absolute path.  
+  Now you can create notes just using `k note content`  
 
-````  
+```  
 positional arguments:  
   text                  The text to parse.  
   
 optional arguments:  
   -h || --help          Show help message and exit  
   -tt || --title        Title of the new note  
-````
+```
 
 ### TODO
-- improve installation (pipx, make or other)
-- paralellize sync
-- use Rich library for better ui
-- improve authentication
+- Improve installation (pipx, make or other)
+- Parallelize sync
+- Use Rich library for better UI
+- Add more note customization options (colors, labels)

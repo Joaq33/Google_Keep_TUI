@@ -2,27 +2,29 @@ import argparse
 import os
 
 import gkeepapi
+import keyring
 from decouple import config
 
 
 def run_task(title='Title', text="Text"):
-    print("" * os.get_terminal_size().columns)
-    auxmail = config("AUX_MAIL")
-    collaborator = config("MAIN_MAIL", default = "")
-    print("", auxmail)
-    print("", "Collaborator:", collaborator)
+    try:
+        columns = os.get_terminal_size().columns
+    except OSError:
+        columns = 80  # Default fallback width
+
+    print("" * columns)
+    email = config("MAIN_MAIL")
+    print("", email)
     print("", title if title != "" else "No title")
-    print("" * os.get_terminal_size().columns)
+    print("" * columns)
     print(text)
-    print("" * os.get_terminal_size().columns)
+    print("" * columns)
     try:
         keep = gkeepapi.Keep()
-        success = keep.login(auxmail, config("AUX_MAIL_PASS"))
-
+        authenticate(email, keep)
         note = keep.createNote(title=title, text=text)
-        note.pinned = False
+        note.pinned = True
         # note.color = gkeepapi.node.ColorValue.Red
-        note.collaborators.add(collaborator)
         keep.sync()
         print(" Note synced ")
     except Exception as e:
@@ -30,7 +32,19 @@ def run_task(title='Title', text="Text"):
         print(" Error in note creation ")
 
 
-def argument_parser() -> tuple[str,str]:
+def authenticate(email, keep):
+    # Prioritize keyring for security
+    master_token = keyring.get_password("google-keep-token", "main_email")
+
+    keep.authenticate(email, master_token)
+    # if login_response:
+    #     print(' Login successful ')
+    # else:
+    #     print(login_response)
+    #     raise Exception("Authentication failed")
+
+
+def argument_parser() -> tuple[str, str]:
     # Command line arguments options
     try:
         parser = argparse.ArgumentParser(description='Add new note to Google Keep.')
@@ -65,8 +79,11 @@ def argument_parser() -> tuple[str,str]:
 
 
 def main():
-    text, title = argument_parser()
-
+    import sys
+    if len(sys.argv) == 1 and os.environ.get('PYCHARM_HOSTED'):
+        text, title = 'Hello World', 'Test Note'
+    else:
+        text, title = argument_parser()
     # Execute function
     run_task(title=title, text=text)
 
